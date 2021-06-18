@@ -49,7 +49,7 @@ export default {
     },
 
     handleDelete(index, row) {
-      this.tableData.splice(index,1)
+      this.DeliverDeleteForm(index);
     },
 
     DeSuccess(){
@@ -77,10 +77,7 @@ export default {
       }).then((response)=>{
         console.log(response);
         if(response.data.code===0){
-          let i;
-          for(i=0;i<response.data.data.deliver.length;i++){
-            this.DeliverTable.push(response.data.data.deliver[i]);
-          }
+            this.DeliverTable=response.data.data.deliver;
         }
       })
         .catch((error)=>{
@@ -112,6 +109,31 @@ export default {
           console.log(error);   /*抓错*/
         });
     },
+
+  DeliverDeleteForm(index){
+    const tokenName = localStorage.getItem('tokenName');  /*从本地存储中取出tokenName的值*/
+    const tokenValue = localStorage.getItem('tokenValue'); /*从本地存储中取出tokenValue的值*/
+    const header = {
+      "content-type": "application/x-www-form-urlencoded"
+    };
+    if(tokenName !== undefined && tokenName !== ''){
+      header[tokenName] = tokenValue
+    }
+    this.axios({
+      method: 'get',
+      url:'http://localhost:8081/deliver/delete/'+this.DeliverTable[index].id,
+      headers: header,
+    }).then((response)=>{
+      console.log(response);
+      if(response.data.code===0){
+        this.DeSuccess();
+        this.DeliverMsgForm();
+      }
+    })
+      .catch((error)=>{
+        console.log(error);   /*抓错*/
+      });
+  }
   }
 }
 </script>

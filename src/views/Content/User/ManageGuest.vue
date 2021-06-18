@@ -49,7 +49,8 @@ export default {
     },
 
     handleDelete(index, row) {
-      this.tableData.splice(index,1)
+      /*this.tableData.splice(index,1)*/
+      this.GuestDeleteForm(index);
     },
 
     geSuccess(){
@@ -73,15 +74,12 @@ export default {
       }
       this.axios({
         method: 'get',
-        url:'http://localhost:8081/show',
+        url:'http://localhost:8081/guest/show',
         headers: header,
       }).then((response)=>{
         console.log(response);
         if(response.data.code===0){
-          let i;
-          for(i=0;i<response.data.data.guest.length;i++){
-            this.GuestTable.push(response.data.data.guest[i]);
-          }
+            this.GuestTable=response.data.data.guest;
         }
       })
         .catch((error)=>{
@@ -100,7 +98,7 @@ export default {
       }
       this.axios({
         method: 'get',
-        url:'http://localhost:8081/guest/edit/'+this.GuestTable[index].id+'/'+this.GuestTable[index].name+'/'+this.GuestTable[index].telephone,
+        url:'http://localhost:8081/guest/user/'+this.GuestTable[index].id+'/'+this.GuestTable[index].name+'/'+this.GuestTable[index].telephone,
         headers: header,
       }).then((response)=>{
         console.log(response);
@@ -112,6 +110,32 @@ export default {
           console.log(error);   /*抓错*/
         });
     },
+
+    GuestDeleteForm(index){
+      const tokenName = localStorage.getItem('tokenName');  /*从本地存储中取出tokenName的值*/
+      const tokenValue = localStorage.getItem('tokenValue'); /*从本地存储中取出tokenValue的值*/
+      const header = {
+        "content-type": "application/x-www-form-urlencoded"
+      };
+      if(tokenName !== undefined && tokenName !== ''){
+        header[tokenName] = tokenValue
+      }
+      this.axios({
+        method: 'get',
+        url:'http://localhost:8081/guest/delete/'+this.GuestTable[index].id,
+        headers: header,
+      }).then((response)=>{
+        console.log(response);
+        if(response.data.code===0){
+          this.geSuccess();
+          this.GuestMsgForm();
+        }
+      })
+        .catch((error)=>{
+          console.log(error);   /*抓错*/
+        });
+    },
+
   }
 }
 </script>

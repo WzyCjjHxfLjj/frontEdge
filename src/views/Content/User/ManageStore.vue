@@ -50,11 +50,21 @@ export default {
   methods: {
     handleEdit(index, row) {
       row.telephone+='a';
-      console.log(index, row);
+      this.StoreEditForm(index);
     },
 
     handleDelete(index, row) {
-      this.tableData.splice(index,1)
+      /*this.tableData.splice(index,1)*/
+      this.StoreDeleteForm(index);
+    },
+
+    DeSuccess(){
+      this.$message({
+        showClose: true,
+        message: '编辑成功',
+        type: 'success',
+        duration: 1000
+      });
     },
 
     StoreMsgForm(){
@@ -73,10 +83,7 @@ export default {
       }).then((response)=>{
         console.log(response);
         if(response.data.code===0){
-          let i;
-          for(i=0;i<response.data.data.store.length;i++){
-            this.StoreTable.push(response.data.data.store[i]);
-          }
+            this.StoreTable=response.data.data.storeList;
         }
       })
         .catch((error)=>{
@@ -84,6 +91,56 @@ export default {
         });
     },
 
+    StoreEditForm(index) {
+      const tokenName = localStorage.getItem('tokenName');  /*从本地存储中取出tokenName的值*/
+      const tokenValue = localStorage.getItem('tokenValue'); /*从本地存储中取出tokenValue的值*/
+      const header = {
+        "content-type": "application/x-www-form-urlencoded"
+      };
+      if(tokenName !== undefined && tokenName !== ''){
+        header[tokenName] = tokenValue
+      }
+      this.axios({
+        method: 'get',
+        url:'http://localhost:8081/store/edit/'+this.StoreTable[index].id+'/'+this.StoreTable[index].name+'/'+this.StoreTable[index].telephone+'/'+this.StoreTable[index].address,
+        headers: header,
+      }).then((response)=>{
+        console.log(response);
+        console.log(this.StoreTable[index].telephone);
+        if(response.data.code===0){
+          this.DeSuccess()
+        }
+      })
+        .catch((error)=>{
+          console.log(error);   /*抓错*/
+        });
+    },
+
+    StoreDeleteForm(index) {
+      const tokenName = localStorage.getItem('tokenName');  /*从本地存储中取出tokenName的值*/
+      const tokenValue = localStorage.getItem('tokenValue'); /*从本地存储中取出tokenValue的值*/
+      const header = {
+        "content-type": "application/x-www-form-urlencoded"
+      };
+      if(tokenName !== undefined && tokenName !== ''){
+        header[tokenName] = tokenValue
+      }
+      this.axios({
+        method: 'get',
+        url:'http://localhost:8081/store/delete/'+this.StoreTable[index].id,
+        headers: header,
+      }).then((response)=>{
+        console.log(response);
+        console.log(this.StoreTable[index].telephone);
+        if(response.data.code===0){
+          this.DeSuccess();
+          this.StoreMsgForm();
+        }
+      })
+        .catch((error)=>{
+          console.log(error);   /*抓错*/
+        });
+    }
 
   }
 }
