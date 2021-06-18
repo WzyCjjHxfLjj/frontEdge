@@ -9,19 +9,58 @@
     <div class="material-item">
       <span class="attribute">商家名:</span>
       <span class="value">{{ s_name }}</span>
-      <el-button type="info" @click="NameEdit()" plain>编辑</el-button>
+      <el-button type="info" @click="dialogVisibleName = true" plain>编辑</el-button>
     </div>
     <div class="material-item">
       <span class="attribute">联系方式:</span>
       <span class="value">{{ s_tel }}</span>
-      <el-button type="info" @click="TelEdit()" plain>编辑</el-button>
+      <el-button type="info" @click="dialogVisibleTel = true" plain>编辑</el-button>
     </div>
     <div class="material-item">
       <span class="attribute">商家地址:</span>
       <span class="value">{{ s_address }}</span>
-      <el-button type="info" @click="AddressEdit" plain>编辑</el-button>
+      <el-button type="info" @click="dialogVisibleAddress = true" plain>编辑</el-button>
     </div>
   </div>
+    <el-dialog title="修改商家名" :visible.sync="dialogVisibleName" width="30%" :before-close="handleClose">
+      <el-form>
+        <el-form-item>
+          <el-form-item label="商家名">
+            <el-input type="text" v-model="newName" style="width: 200px" placeholder="请输入新商家名"></el-input>
+          </el-form-item>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisibleName = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisibleName = false;NameEdit()">确 定</el-button>
+        </span>
+    </el-dialog>
+    <el-dialog title="修改电话" :visible.sync="dialogVisibleTel" width="30%" :before-close="handleClose">
+      <el-form>
+        <el-form-item>
+          <el-form-item label="电话">
+            <el-input type="text" v-model="newTel" style="width: 200px" placeholder="请输入新电话"></el-input>
+          </el-form-item>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisibleTel = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisibleTel = false;TelEdit()">确 定</el-button>
+        </span>
+    </el-dialog>
+    <el-dialog title="修改地址" :visible.sync="dialogVisibleAddress" width="30%" :before-close="handleClose">
+      <el-form>
+        <el-form-item>
+          <el-form-item label="地址">
+            <el-input type="text" v-model="newAddress" style="width: 200px" placeholder="请输入地址"></el-input>
+          </el-form-item>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisibleAddress = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisibleAddress = false;AddressEdit()">确 定</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -35,6 +74,12 @@ export default {
       s_name: '',
       s_tel: '',
       s_address: '',
+      newName: '',
+      newTel: '',
+      newAddress: '',
+      dialogVisibleName: false,
+      dialogVisibleTel: false,
+      dialogVisibleAddress: false
     }
   },
 
@@ -47,18 +92,29 @@ export default {
 
   methods:{
     NameEdit(){
-      this.s_name+='a';
+      this.dialogVisibleName = false;
+      this.s_name = this.newName;
       this.StoreEditForm();
     },
 
     TelEdit(){
-      this.s_tel+='a';
+      this.dialogVisibleTel = false;
+      this.s_tel = this.newTel;
       this.StoreEditForm();
     },
 
     AddressEdit(){
-      this.s_address+='a';
+      this.dialogVisibleAddress = false;
+      this.s_address = this.newAddress;
       this.StoreEditForm();
+    },
+
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
     },
 
     EditSuccess(){

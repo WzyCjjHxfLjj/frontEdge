@@ -110,6 +110,7 @@ export default {
         console.log(response);
         if(response.data.code===0){
          this.$router.push('/');
+         localStorage.clear();
          this.abSuccess();
         }
       })
