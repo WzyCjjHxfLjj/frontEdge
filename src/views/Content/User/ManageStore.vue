@@ -74,8 +74,8 @@ export default {
         console.log(response);
         if(response.data.code===0){
           let i;
-          for(i=0;i<response.data.data.store.length;i++){
-            this.StoreTable.push(response.data.data.store[i]);
+          for(i=0;i<response.data.data.storeList.length;i++){
+            this.StoreTable.push(response.data.data.storeList[i]);
           }
         }
       })
