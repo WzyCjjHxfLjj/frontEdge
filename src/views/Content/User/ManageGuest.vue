@@ -73,7 +73,7 @@ export default {
       }
       this.axios({
         method: 'get',
-        url:'http://localhost:8081/show',
+        url:'http://localhost:8081/guest/show',
         headers: header,
       }).then((response)=>{
         console.log(response);
